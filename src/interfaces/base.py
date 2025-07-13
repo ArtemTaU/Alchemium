@@ -80,7 +80,7 @@ class IReadRepository(ABC, Generic[T]):
     @abstractmethod
     async def first(
         self,
-        session: AsyncSession,
+        asession: AsyncSession,
         *,
         filters: dict = None,
         order_by: Optional[str] = None,

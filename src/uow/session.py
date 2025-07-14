@@ -19,8 +19,7 @@ from ..exceptions import (
     ForeignKeyViolation,
     DataValidationError,
     TransactionError,
-    CreateError,
-    UnknownCreateError,
+    UnknownTransactionError,
 )
 
 
@@ -77,7 +76,7 @@ class UnitOfWork(AbstractAsyncContextManager):
                 raise UniqueViolation from exc
             if "foreign key" in msg:
                 raise ForeignKeyViolation from exc
-            raise CreateError from exc
+            raise TransactionError from exc
         except DataError as exc:
             await self.session.rollback()
             raise DataValidationError from exc
@@ -86,7 +85,7 @@ class UnitOfWork(AbstractAsyncContextManager):
             raise TransactionError from exc
         except Exception as exc:
             await self.session.rollback()
-            raise UnknownCreateError from exc
+            raise UnknownTransactionError from exc
 
     async def rollback(self):
         await self.session.rollback()

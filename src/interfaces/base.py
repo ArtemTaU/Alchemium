@@ -2,8 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Dict, Generic, List, Optional, TypeVar
 from sqlalchemy.ext.asyncio import AsyncSession
 
-
-T = TypeVar("T")
+from ..typing import T
 
 
 class ICreateRepository(ABC, Generic[T]):

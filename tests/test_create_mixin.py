@@ -36,7 +36,7 @@ from .models import UserRepository, User
 
 
 @pytest.mark.asyncio
-async def test_create_and_get_user(async_session_factory):
+async def test_create_user(async_session_factory):
     """
     Test that a new user can be created and retrieved from the database using UnitOfWork.
 

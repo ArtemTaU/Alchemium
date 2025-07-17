@@ -1,6 +1,6 @@
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import declarative_base
-from src.mixins import CreateMixin
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import declarative_base, relationship
+from src.mixins import CreateMixin, ReadMixin
 
 Base = declarative_base()
 
@@ -10,6 +10,21 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
 
+    profile = relationship("Profile", back_populates="user", uselist=False)
 
-class UserRepository(CreateMixin):
+
+class Profile(Base):
+    __tablename__ = "profiles"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"), unique=True)
+    bio = Column(String)
+
+    user = relationship("User", back_populates="profile")
+
+
+class UserRepository(CreateMixin, ReadMixin):
     model = User
+
+
+class ProfileRepository(CreateMixin, ReadMixin):
+    model = Profile

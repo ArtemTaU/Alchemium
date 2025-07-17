@@ -4,4 +4,11 @@ from .base import (
     ForeignKeyViolation,
     DataValidationError,
     UnknownTransactionError,
+    QueryError,
+    RelationNotFoundError,
+    FieldNotFoundError,
+    QueryExecutionError,
+    OrderByFieldError,
+    PaginationParameterError,
+    RepositoryUsageError,
 )

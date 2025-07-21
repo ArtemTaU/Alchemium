@@ -1,5 +1,10 @@
 from typing import Type, Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
+from ..exceptions import (
+    RepositoryUsageError,
+    DataValidationError,
+    UnknownTransactionError,
+)
 
 from ..typing import T
 
@@ -17,12 +22,31 @@ class CreateMixin:
         Returns:
             T: The newly created ORM model instance.
         Raises:
-            NotImplementedError: If the repository does not define model attribute.
+            RepositoryUsageError: If the repository does not define model attribute.
+            DataValidationError: If the provided data is invalid.
+            UnknownTransactionError: For any other unexpected error during object creation.
         """
         if cls.model is None:
-            raise NotImplementedError(
-                f"{cls.__name__}: Repository must define model attribute"
+            raise RepositoryUsageError(
+                details=f"{cls.__name__} repository must define model attribute"
             )
-        obj = cls.model(**data)
-        asession.add(obj)
-        return obj
+
+        try:
+            obj = cls.model(**data)
+            asession.add(obj)
+            return obj
+        except TypeError as exc:
+            raise DataValidationError(
+                details=f"Invalid argument(s) for model '{getattr(cls.model, '__name__', str(cls.model))}'",
+                original=str(exc),
+            ) from exc
+        except ValueError as exc:
+            raise DataValidationError(
+                details=f"Invalid value(s) for model '{getattr(cls.model, '__name__', str(cls.model))}'",
+                original=str(exc),
+            ) from exc
+        except Exception as exc:
+            raise UnknownTransactionError(
+                details=f"Unexpected error while creating '{getattr(cls.model, '__name__', str(cls.model))}'",
+                original=str(exc),
+            ) from exc

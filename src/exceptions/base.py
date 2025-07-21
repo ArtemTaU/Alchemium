@@ -25,25 +25,36 @@ class RepositoryError(Exception):
         return [fname for _, fname, _, _ in string.Formatter().parse(template) if fname]
 
 
-# --- Transaction (write) errors ---
+# --- Transaction errors ---
 class TransactionError(RepositoryError):
     """Base error for any commit/transaction failure."""
+
+    template = "Transaction failed. {original}"
+
+
+class UnknownTransactionError(TransactionError):
+    """Any other unexpected error during transaction."""
+
+    template = "Unexpected error during transaction. {details}. {original}"
+
+
+# --- Write errors ---
+class DataValidationError(TransactionError):
+    """Invalid data (DataError, wrong type/length/etc)."""
+
+    template = "Invalid data: {details}. {original}"
 
 
 class UniqueViolation(TransactionError):
     """Unique constraint violation."""
 
+    template = "Unique constraint violation. {original}"
+
 
 class ForeignKeyViolation(TransactionError):
     """Foreign key constraint violation."""
 
-
-class DataValidationError(TransactionError):
-    """Invalid data (DataError, wrong type/length/etc)."""
-
-
-class UnknownTransactionError(TransactionError):
-    """Any other unexpected error during transaction."""
+    template = "Foreign key constraint violation. {original}"
 
 
 # --- Read/query errors ---

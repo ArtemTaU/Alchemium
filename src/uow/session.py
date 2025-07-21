@@ -73,19 +73,19 @@ class UnitOfWork(AbstractAsyncContextManager):
             await self.session.rollback()
             msg = str(exc.orig).lower()
             if "unique" in msg:
-                raise UniqueViolation from exc
+                raise UniqueViolation(original=str(exc)) from exc
             if "foreign key" in msg:
-                raise ForeignKeyViolation from exc
-            raise TransactionError from exc
+                raise ForeignKeyViolation(original=str(exc)) from exc
+            raise TransactionError(original=str(exc)) from exc
         except DataError as exc:
             await self.session.rollback()
-            raise DataValidationError from exc
+            raise DataValidationError(original=str(exc)) from exc
         except SQLAlchemyError as exc:
             await self.session.rollback()
-            raise TransactionError from exc
+            raise TransactionError(original=str(exc)) from exc
         except Exception as exc:
             await self.session.rollback()
-            raise UnknownTransactionError from exc
+            raise UnknownTransactionError(details="", original=str(exc)) from exc
 
     async def rollback(self):
         await self.session.rollback()

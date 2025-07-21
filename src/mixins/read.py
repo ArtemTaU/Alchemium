@@ -33,7 +33,7 @@ class ReadMixin:
         """
         if cls.model is None:
             raise RepositoryUsageError(
-                f"{cls.__name__}: Repository must define model attribute"
+                details=f"{cls.__name__} repository must define model attribute"
             )
 
         model_name = getattr(cls.model, "__name__", str(cls.model))
@@ -47,8 +47,9 @@ class ReadMixin:
                     stmt = stmt.options(selectinload(join_attr))
                 except (AttributeError, InvalidRequestError, ArgumentError) as exc:
                     raise RelationNotFoundError(
-                        f"Model '{model_name}': relation '{rel}' for join not found or invalid. "
-                        f"Original error: {exc}"
+                        model=model_name,
+                        rel=rel,
+                        original=f" Original error: {exc}" if exc else "",
                     ) from exc
 
         if filters:
@@ -57,18 +58,24 @@ class ReadMixin:
                     attr = getattr(cls.model, k, None)
                     if attr is None:
                         raise FieldNotFoundError(
-                            f"Model '{model_name}': filter field '{k}' not found."
+                            model=model_name,
+                            field=k,
+                            original="",
                         )
                     stmt = stmt.where(attr == v)
                 except FieldNotFoundError:
                     raise
                 except AttributeError as exc:
                     raise FieldNotFoundError(
-                        f"Model '{model_name}': filter field '{k}' not found. Original error: {exc}"
+                        model=model_name,
+                        field=k,
+                        original="",
                     ) from exc
                 except Exception as exc:
                     raise QueryError(
-                        f"Model '{model_name}': unknown filter error for field '{k}': {exc}"
+                        model=model_name,
+                        field=k,
+                        original=f" Original error: {exc}" if exc else "",
                     ) from exc
 
         try:
@@ -76,9 +83,13 @@ class ReadMixin:
             return result.scalars().first()
         except (StatementError, DataError) as exc:
             raise QueryExecutionError(
-                f"Model '{model_name}': query execution error (data/type issue): {exc}"
+                model=model_name,
+                details=str("(data/type issue)"),
+                original=f"{exc}",
             ) from exc
         except Exception as exc:
             raise QueryExecutionError(
-                f"Model '{model_name}': unknown error during query execution: {exc}"
+                model=model_name,
+                details=str("(unknown error)"),
+                original=f"{exc}",
             ) from exc

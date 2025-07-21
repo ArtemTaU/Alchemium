@@ -25,14 +25,14 @@ class IReadRepository(ABC, Generic[T]):
         asession: AsyncSession,
         *,
         filters: dict = None,
-        related: list[str] = None,
+        joins: list[str] = None,
     ) -> Optional[T]:
         """
         Retrieve a single record matching filters.
 
         :param asession: Async database session.
         :param filters: Dict with filters to apply.
-        :param related: List of related models to join/prefetch.
+        :param joins: List of related models to join/prefetch.
         :return: Model instance or None.
         """
         raise NotImplementedError("Get method not implemented")
@@ -46,7 +46,7 @@ class IReadRepository(ABC, Generic[T]):
         order_by: Optional[str] = None,
         skip: Optional[int] = None,
         limit: Optional[int] = None,
-        related: List[str] = None,
+        joins: List[str] = None,
     ) -> list[T]:
         """
         Retrieve a list of records matching filters, with optional ordering and pagination.
@@ -56,7 +56,7 @@ class IReadRepository(ABC, Generic[T]):
         :param order_by: Field name to order results.
         :param skip: Number of records to skip.
         :param limit: Max number of records to return.
-        :param related: List of related models to join/prefetch.
+        :param joins: List of related models to join/prefetch.
         :return: List of model instances.
         """
         raise NotImplementedError("List method not implemented")
@@ -83,7 +83,7 @@ class IReadRepository(ABC, Generic[T]):
         *,
         filters: dict = None,
         order_by: Optional[str] = None,
-        related: List[str] = None,
+        joins: List[str] = None,
     ) -> Optional[T]:
         """
         Retrieve the first record matching filters (with optional ordering).
@@ -91,7 +91,7 @@ class IReadRepository(ABC, Generic[T]):
         :param asession: Async database session.
         :param filters: Dict with filters to apply.
         :param order_by: Field name to order results.
-        :param related: List of related models to join/prefetch.
+        :param joins: List of related models to join/prefetch.
         :return: Model instance or None.
         """
         raise NotImplementedError("First method not implemented")

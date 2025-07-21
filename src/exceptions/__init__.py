@@ -1,14 +1,13 @@
 from .base import (
     TransactionError,
-    UniqueViolation,
-    ForeignKeyViolation,
-    DataValidationError,
     UnknownTransactionError,
-    QueryError,
+)
+from .session import UniqueViolation, ForeignKeyViolation
+from .mixins import RepositoryUsageError, DataValidationError, QueryExecutionError
+from .builder import (
     RelationNotFoundError,
     FieldNotFoundError,
-    QueryExecutionError,
+    QueryError,
     OrderByFieldError,
     PaginationParameterError,
-    RepositoryUsageError,
 )

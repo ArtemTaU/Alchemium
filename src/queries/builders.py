@@ -14,6 +14,24 @@ from src.typing import ModelType
 
 
 class QueryBuilder:
+    """
+    Utility mixin class for building and modifying SQLAlchemy Select statements with
+    support for dynamic joins, filters, ordering, and pagination.
+
+    This class is intended to be used as a mixin for repository or data access classes
+    that operate with SQLAlchemy ORM models. It provides helper class methods to:
+      - Apply selectinload joins for related models via `_apply_joins`
+      - Add WHERE conditions based on filters via `_apply_filters`
+      - Add ORDER BY clause via `_apply_order_by`
+      - Add OFFSET and LIMIT for pagination via `_apply_pagination`
+
+    All methods include error handling with custom exceptions for better diagnostics
+    and unified error reporting.
+
+    Attributes:
+        model (ModelType): SQLAlchemy ORM model class associated with the query.
+    """
+
     model: ModelType
 
     @classmethod

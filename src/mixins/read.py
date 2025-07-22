@@ -1,18 +1,16 @@
 from typing import Type, Optional, Dict, Any, Sequence, List
 
 from sqlalchemy import select
-from sqlalchemy.exc import StatementError, DataError
 from sqlalchemy.ext.asyncio import AsyncSession
-from ..query.builder import QueryBuilder
+from ..queries import *
 from ..typing import T
 
 from ..exceptions import (
-    QueryExecutionError,
     RepositoryUsageError,
 )
 
 
-class ReadMixin(QueryBuilder):
+class ReadMixin(QueryBuilder, QueryExecutor):
     model = None
 
     @classmethod
@@ -24,8 +22,19 @@ class ReadMixin(QueryBuilder):
         joins: Optional[Sequence[str]] = None,
     ) -> Optional[T]:
         """
-        Получить один объект по фильтрам, c optional join.
+        Retrieve a single object matching the specified filters, with optional joins.
+
+        :param asession: Async database session.
+        :param filters: Optional dictionary of filter conditions to apply.
+        :param joins: Optional list/sequence of related models to join.
+        :return: Instance of the model if found, otherwise None.
+        :raises RelationNotFoundError: If join attribute not found or invalid.
+        :raises FieldNotFoundError: If field is not found in model.
+        :raises QueryError: For other unknown filter errors.
+        :raises RepositoryUsageError: If the model attribute is not defined in the repository.
+        :raises QueryExecutionError: If there are issues executing the query.
         """
+        ...
         if cls.model is None:
             raise RepositoryUsageError(
                 details=f"{cls.__name__} repository must define model attribute"
@@ -37,21 +46,8 @@ class ReadMixin(QueryBuilder):
         stmt = cls.apply_joins(stmt, joins, model_name)
         stmt = cls.apply_filters(stmt, filters, model_name)
 
-        try:
-            result = await asession.execute(stmt)
-            return result.scalars().first()
-        except (StatementError, DataError) as exc:
-            raise QueryExecutionError(
-                model=model_name,
-                details=str("(data/type issue)"),
-                original=f"{exc}",
-            ) from exc
-        except Exception as exc:
-            raise QueryExecutionError(
-                model=model_name,
-                details=str("(unknown error)"),
-                original=f"{exc}",
-            ) from exc
+        result = await cls.execute(stmt, asession, model_name)
+        return result.scalars().first()
 
     @classmethod
     async def list(
@@ -74,6 +70,13 @@ class ReadMixin(QueryBuilder):
         :param limit: Max number of records to return.
         :param joins: List of related models to join/prefetch.
         :return: List of model instances.
+        :raises RelationNotFoundError: If join attribute not found or invalid.
+        :raises FieldNotFoundError: If field is not found in model.
+        :raises QueryError: For other unknown filter errors.
+        :raises OrderByFieldError: If order_by field is invalid.
+        :raises PaginationParameterError: If skip or limit cause an error.
+        :raises RepositoryUsageError: If the model attribute is not defined in the repository.
+        :raises QueryExecutionError: If there are issues executing the query.
         """
         if cls.model is None:
             raise RepositoryUsageError(
@@ -88,18 +91,5 @@ class ReadMixin(QueryBuilder):
         stmt = cls.apply_order_by(stmt, order_by, model_name)
         stmt = cls.apply_pagination(stmt, skip, limit, model_name)
 
-        try:
-            result = await asession.execute(stmt)
-            return result.scalars().all()
-        except (StatementError, DataError) as exc:
-            raise QueryExecutionError(
-                model=model_name,
-                details=str("(data/type issue)"),
-                original=f"{exc}",
-            ) from exc
-        except Exception as exc:
-            raise QueryExecutionError(
-                model=model_name,
-                details=str("(unknown error)"),
-                original=f"{exc}",
-            ) from exc
+        result = await cls.execute(stmt, asession, model_name)
+        return result.scalars().all()

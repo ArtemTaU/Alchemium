@@ -1,6 +1,6 @@
 import pytest
 from src.uow import UnitOfWork
-from tests.models import UserRepository, ProfileRepository
+from tests.models import UserRepository, ProfileRepository, User
 
 from src.exceptions import (
     RelationNotFoundError,
@@ -23,19 +23,16 @@ async def test_get_one_user(async_session_factory):
     Args:
         async_session_factory (async_sessionmaker): Fixture providing session factory for UoW.
     """
-    # Step 1: Create user
     user_data = {"name": "Readium"}
 
     async with UnitOfWork(async_session_factory) as uow:
         await UserRepository.create(uow.session, user_data)
 
-    # Step 2: Read user using repository
     async with UnitOfWork(async_session_factory) as uow:
-        user = await UserRepository.get_one(
+        user: User = await UserRepository.get_one(
             asession=uow.session,
             filters={"name": "Readium"},
         )
-        # Step 3: Assert
         assert user is not None
         assert user.name == "Readium"
 
@@ -70,7 +67,7 @@ async def test_get_one_user_with_profile(async_session_factory):
         )
 
     async with UnitOfWork(async_session_factory) as uow:
-        user = await UserRepository.get_one(
+        user: User = await UserRepository.get_one(
             asession=uow.session, filters={"name": "JoinedUser"}, joins=["profile"]
         )
         assert user is not None
@@ -109,14 +106,14 @@ async def test_get_one_profile_by_user_id(async_session_factory):
         )
 
     async with UnitOfWork(async_session_factory) as uow:
-        result = await ProfileRepository.get_one(
+        user: User = await ProfileRepository.get_one(
             asession=uow.session,
             filters={"user_id": user.id},
             joins=["user"],
         )
-        assert result is not None
-        assert result.bio == profile_data.get("bio")
-        assert result.user.name == user_data.get("name")
+        assert user is not None
+        assert user.bio == profile_data.get("bio")
+        assert user.user.name == user_data.get("name")
 
 
 @pytest.mark.asyncio

@@ -32,7 +32,7 @@ from src.exceptions import (
     UnknownTransactionError,
 )
 from src.uow import UnitOfWork
-from .models import UserRepository, User
+from tests.models import UserRepository, User
 
 
 @pytest.mark.asyncio

@@ -9,6 +9,7 @@ class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
+    position = Column(String)
 
     profile = relationship("Profile", back_populates="user", uselist=False)
 

@@ -1,6 +1,6 @@
 from typing import Type, Optional, Dict, Any, Sequence, List
 
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from ..queries import *
 from ..typing import T
@@ -34,7 +34,6 @@ class ReadMixin(QueryBuilder, QueryExecutor):
         :raises RepositoryUsageError: If the model attribute is not defined in the repository.
         :raises QueryExecutionError: If there are issues executing the query.
         """
-        ...
         if cls.model is None:
             raise RepositoryUsageError(
                 details=f"{cls.__name__} repository must define model attribute"
@@ -93,3 +92,31 @@ class ReadMixin(QueryBuilder, QueryExecutor):
 
         result = await cls.execute(stmt, asession, model_name)
         return result.scalars().all()
+
+    @classmethod
+    async def count(
+        cls,
+        *,
+        asession: AsyncSession,
+        filters: Optional[Dict[str, Any]] = None,
+    ) -> int:
+        """
+        Count records matching filters.
+
+        :param asession: Async database session.
+        :param filters: Dict with filters to apply.
+        :return: Number of matching records.
+        :raises RepositoryUsageError: If the model attribute is not defined in the repository.
+        """
+        if cls.model is None:
+            raise RepositoryUsageError(
+                details=f"{cls.__name__} repository must define model attribute"
+            )
+
+        model_name = getattr(cls.model, "__name__", str(cls.model))
+
+        stmt = select(func.count()).select_from(cls.model)
+        stmt = cls.apply_filters(stmt, filters, model_name)
+
+        result = await cls.execute(stmt, asession, model_name)
+        return result.scalar_one()

@@ -8,6 +8,7 @@ from ..typing import T
 from ..exceptions import (
     RepositoryUsageError,
 )
+from ..utils import validate_model_defined
 
 
 class ReadMixin(QueryBuilder, QueryExecutor):
@@ -34,10 +35,7 @@ class ReadMixin(QueryBuilder, QueryExecutor):
         :raises RepositoryUsageError: If the model attribute is not defined in the repository.
         :raises QueryExecutionError: If there are issues executing the query.
         """
-        if cls.model is None:
-            raise RepositoryUsageError(
-                details=f"{cls.__name__} repository must define model attribute"
-            )
+        validate_model_defined(cls)
 
         model_name = getattr(cls.model, "__name__", str(cls.model))
 
@@ -77,10 +75,7 @@ class ReadMixin(QueryBuilder, QueryExecutor):
         :raises RepositoryUsageError: If the model attribute is not defined in the repository.
         :raises QueryExecutionError: If there are issues executing the query.
         """
-        if cls.model is None:
-            raise RepositoryUsageError(
-                details=f"{cls.__name__} repository must define model attribute"
-            )
+        validate_model_defined(cls)
 
         model_name = getattr(cls.model, "__name__", str(cls.model))
 
@@ -108,10 +103,7 @@ class ReadMixin(QueryBuilder, QueryExecutor):
         :return: Number of matching records.
         :raises RepositoryUsageError: If the model attribute is not defined in the repository.
         """
-        if cls.model is None:
-            raise RepositoryUsageError(
-                details=f"{cls.__name__} repository must define model attribute"
-            )
+        validate_model_defined(cls)
 
         model_name = getattr(cls.model, "__name__", str(cls.model))
 

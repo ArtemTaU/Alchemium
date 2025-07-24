@@ -5,48 +5,42 @@ from ..exceptions import (
     DataValidationError,
     UnknownTransactionError,
 )
+from ..queries import ModelInitializer, SessionAdder
 
 from ..typing import T
+from ..utils import validate_model_defined
 
 
-class CreateMixin:
+class CreateMixin(ModelInitializer, SessionAdder):
+    """
+    Mixin for creating new ORM records with standardized error handling.
+
+    Provides a classmethod to safely instantiate and add new SQLAlchemy model
+    instances to an async session, raising consistent and informative exceptions
+    on errors. The operation does NOT commit the session.
+
+    Attributes:
+        model (Type[T]): The SQLAlchemy ORM model class to create.
+    """
+
     model = None
 
     @classmethod
     async def create(cls: Type[T], asession: AsyncSession, data: Dict[str, Any]) -> T:
         """
-        Create a new record in the database. Does NOT commit!
-        Args:
-            asession (AsyncSession): Async database session.
-            data (dict): Data to create a new record.
-        Returns:
-            T: The newly created ORM model instance.
-        Raises:
-            RepositoryUsageError: If the repository does not define model attribute.
-            DataValidationError: If the provided data is invalid.
-            UnknownTransactionError: For any other unexpected error during object creation.
-        """
-        if cls.model is None:
-            raise RepositoryUsageError(
-                details=f"{cls.__name__} repository must define model attribute"
-            )
+        Create a new ORM model instance and add it to the async session with error handling.
 
-        try:
-            obj = cls.model(**data)
-            asession.add(obj)
-            return obj
-        except TypeError as exc:
-            raise DataValidationError(
-                details=f"Invalid argument(s) for model '{getattr(cls.model, '__name__', str(cls.model))}'",
-                original=str(exc),
-            ) from exc
-        except ValueError as exc:
-            raise DataValidationError(
-                details=f"Invalid value(s) for model '{getattr(cls.model, '__name__', str(cls.model))}'",
-                original=str(exc),
-            ) from exc
-        except Exception as exc:
-            raise UnknownTransactionError(
-                details=f"Unexpected error while creating '{getattr(cls.model, '__name__', str(cls.model))}'",
-                original=str(exc),
-            ) from exc
+        :param asession: The asynchronous SQLAlchemy session.
+        :param data: Dict of attributes for the model.
+        :return: The newly created ORM model instance.
+        :raises RepositoryUsageError: If the repository does not define model attribute.
+        :raises DataValidationError: If the provided data is invalid for model construction.
+        :raises UnknownTransactionError: For any other unexpected error during object creation.
+        """
+        validate_model_defined(cls)
+
+        model_name = getattr(cls.model, "__name__", str(cls.model))
+        obj = cls.initialize(data, model_name)
+        cls.session_add(asession, obj, model_name)
+
+        return obj

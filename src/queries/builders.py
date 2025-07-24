@@ -9,8 +9,54 @@ from src.exceptions import (
     QueryError,
     OrderByFieldError,
     PaginationParameterError,
+    DataValidationError,
+    UnknownTransactionError,
 )
-from src.typing import ModelType
+from src.typing import ModelType, T
+
+
+class ModelInitializer:
+    """
+    Utility class for instantiating SQLAlchemy models with standardized error handling.
+
+    Designed to be used as a mixin or parent for repository/data-access classes.
+    Provides a single classmethod to safely instantiate model objects and raise
+    uniform, informative exceptions on construction errors.
+
+    Attributes:
+        model (Type[T]): The SQLAlchemy ORM model class to instantiate.
+    """
+
+    model: ModelType
+
+    @classmethod
+    def initialize(cls, data: dict, model_name: str) -> T:
+        """
+        Instantiate a SQLAlchemy model object with error handling.
+
+        :param data: Dict of attributes for the model.
+        :param model_name: Name of the model being instantiated (for error reporting).
+        :return: The created model instance.
+        :raises DataValidationError: If data is invalid.
+        :raises UnknownTransactionError: For any other unexpected error.
+        """
+        try:
+            return cls.model(**data)
+        except TypeError as exc:
+            raise DataValidationError(
+                details=f"Invalid argument(s) for model '{model_name}'",
+                original=str(exc),
+            ) from exc
+        except ValueError as exc:
+            raise DataValidationError(
+                details=f"Invalid value(s) for model '{model_name}'",
+                original=str(exc),
+            ) from exc
+        except Exception as exc:
+            raise UnknownTransactionError(
+                details=f"Unexpected error while creating '{model_name}'",
+                original=str(exc),
+            ) from exc
 
 
 class QueryBuilder:

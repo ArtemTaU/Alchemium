@@ -2,7 +2,42 @@ from typing import Any
 
 from sqlalchemy.exc import StatementError, DataError
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.exceptions import QueryExecutionError
+from src.exceptions import (
+    QueryExecutionError,
+    UnknownTransactionError,
+)
+
+
+class SessionAdder:
+    """
+    Utility class for adding model instances to a SQLAlchemy session with error handling.
+
+    This class provides a classmethod to add an ORM object to an async session,
+    catching and re-raising errors with detailed exception information.
+    """
+
+    @classmethod
+    def session_add(
+        cls,
+        asession: AsyncSession,
+        obj: object,
+        model_name: str,
+    ) -> None:
+        """
+        Add an ORM object to the async SQLAlchemy session with error handling.
+
+        :param asession: The asynchronous SQLAlchemy session.
+        :param obj: The ORM model instance to add.
+        :param model_name: Name of the model (for error reporting).
+        :raises UnknownTransactionError: If any error occurs during add.
+        """
+        try:
+            asession.add(obj)
+        except Exception as exc:
+            raise UnknownTransactionError(
+                details=f"Unexpected error while adding '{model_name}' to session",
+                original=str(exc),
+            ) from exc
 
 
 class QueryExecutor:

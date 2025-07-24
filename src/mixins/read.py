@@ -120,3 +120,66 @@ class ReadMixin(QueryBuilder, QueryExecutor):
 
         result = await cls.execute(stmt, asession, model_name)
         return result.scalar_one()
+
+    @classmethod
+    async def first(
+        cls,
+        *,
+        asession: AsyncSession,
+        filters: Optional[Dict[str, Any]] = None,
+        order_by: Optional[str] = None,
+        joins: Optional[List[str]] = None,
+    ) -> Optional[T]:
+        """
+        Retrieve the first record matching filters (with optional ordering and joins).
+
+        :param asession: Async database session.
+        :param filters: Optional dictionary of filter conditions to apply.
+        :param order_by: Field name to order results.
+        :param joins: Optional list of related models to join/prefetch.
+        :return: The first model instance if found, otherwise None.
+        :raises RepositoryUsageError: If the model attribute is not defined in the repository.
+        :raises RelationNotFoundError: If join attribute not found or invalid.
+        :raises FieldNotFoundError: If filter field is not found in model.
+        :raises QueryError: For other unknown filter errors.
+        :raises OrderByFieldError: If order_by field is invalid.
+        :raises QueryExecutionError: If there are issues executing the query.
+        """
+        records = await cls.list(
+            asession=asession,
+            filters=filters,
+            order_by=order_by,
+            skip=None,
+            limit=1,
+            joins=joins,
+        )
+        return records[0] if records else None
+
+    @classmethod
+    async def exists(
+        cls,
+        *,
+        asession: AsyncSession,
+        filters: Optional[Dict[str, Any]] = None,
+        joins: Optional[List[str]] = None,
+    ) -> bool:
+        """
+        Check if any record exists matching filters.
+
+        :param asession: Async database session.
+        :param filters: Optional dictionary of filter conditions to apply.
+        :param joins: Optional list of related models to join/prefetch.
+        :return: True if at least one record exists, False otherwise.
+        :raises RepositoryUsageError: If the model attribute is not defined in the repository.
+        :raises RelationNotFoundError: If join attribute not found or invalid.
+        :raises FieldNotFoundError: If filter field is not found in model.
+        :raises QueryError: For other unknown filter errors.
+        :raises QueryExecutionError: If there are issues executing the query.
+        """
+        records = await cls.list(
+            asession=asession,
+            filters=filters,
+            limit=1,
+            joins=joins,
+        )
+        return bool(records)

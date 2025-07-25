@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import declarative_base, relationship
-from src.mixins import CreateMixin, ReadMixin
+from src.mixins import CreateMixin, ReadMixin, UpdateMixin
 
 Base = declarative_base()
 
@@ -23,7 +23,7 @@ class Profile(Base):
     user = relationship("User", back_populates="profile")
 
 
-class UserRepository(CreateMixin, ReadMixin):
+class UserRepository(CreateMixin, ReadMixin, UpdateMixin):
     model = User
 
 

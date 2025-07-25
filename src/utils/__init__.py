@@ -1,1 +1,1 @@
-from .validators import validate_model_defined
+from .validators import validate_model_defined, validate_object_to_update_defined

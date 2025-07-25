@@ -2,12 +2,9 @@ from typing import Type, Optional, Dict, Any, Sequence, List
 
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
-from ..queries import *
+from ..sqlalchemy_layers import *
 from ..typing import T
 
-from ..exceptions import (
-    RepositoryUsageError,
-)
 from ..utils import validate_model_defined
 
 

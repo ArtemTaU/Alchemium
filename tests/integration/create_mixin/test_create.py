@@ -1,7 +1,7 @@
 """
-Unit tests for UserRepository.create and custom exception handling.
+Integration tests for Create Mixin and custom exception handling.
 
-This module tests that UserRepository.create correctly raises the expected custom
+This module tests that Create Mixin correctly creates db objects and raises the expected custom
 exceptions on various SQLAlchemy errors (unique violation, foreign key violation,
 data errors, transaction errors, and unknown errors). Most error cases are simulated
 via mocking since some database constraint violations may not occur with in-memory

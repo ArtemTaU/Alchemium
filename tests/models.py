@@ -29,3 +29,17 @@ class UserRepository(CreateMixin, ReadMixin, UpdateMixin):
 
 class ProfileRepository(CreateMixin, ReadMixin):
     model = Profile
+
+
+class DummyModel:
+    def __init__(self, name=None, age=None):
+        self.name = name
+        self.age = age
+
+
+class DummyRepository(UpdateMixin):
+    model = DummyModel
+
+
+class IncompleteRepository(UpdateMixin):
+    model = None

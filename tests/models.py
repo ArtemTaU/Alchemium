@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import declarative_base, relationship
 from src.mixins import CreateMixin, ReadMixin, UpdateMixin
+from src.mixins.delete import DeleteMixin
 
 Base = declarative_base()
 
@@ -23,11 +24,11 @@ class Profile(Base):
     user = relationship("User", back_populates="profile")
 
 
-class UserRepository(CreateMixin, ReadMixin, UpdateMixin):
+class UserRepository(CreateMixin, ReadMixin, UpdateMixin, DeleteMixin):
     model = User
 
 
-class ProfileRepository(CreateMixin, ReadMixin):
+class ProfileRepository(CreateMixin, ReadMixin, UpdateMixin, DeleteMixin):
     model = Profile
 
 
@@ -37,9 +38,9 @@ class DummyModel:
         self.age = age
 
 
-class DummyRepository(UpdateMixin):
+class DummyRepository(CreateMixin, ReadMixin, UpdateMixin, DeleteMixin):
     model = DummyModel
 
 
-class IncompleteRepository(UpdateMixin):
+class IncompleteRepository(CreateMixin, ReadMixin, UpdateMixin, DeleteMixin):
     model = None

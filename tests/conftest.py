@@ -19,6 +19,8 @@ IMPORTANT:
 - The DATABASE_URL should point to a dedicated test database or use in-memory SQLite.
 """
 
+from unittest.mock import AsyncMock
+
 import pytest_asyncio
 from sqlalchemy.ext.asyncio import (
     create_async_engine,
@@ -73,3 +75,9 @@ async def async_session_factory(async_engine):
     async with async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     return async_sessionmaker(async_engine, expire_on_commit=False, class_=AsyncSession)
+
+
+@pytest_asyncio.fixture
+def mock_session():
+    session = AsyncMock()
+    return session

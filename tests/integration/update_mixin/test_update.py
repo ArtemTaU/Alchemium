@@ -23,7 +23,6 @@ async def test_update_user_success(async_session_factory):
         )
         user = result.scalar_one()
         UserRepository.update(user, update_data)
-        await uow.commit()
 
     async with UnitOfWork(async_session_factory) as uow:
         result = await uow.session.execute(

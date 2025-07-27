@@ -2,7 +2,11 @@ from typing import Type, Dict, Any
 from ..exceptions import DataValidationError
 
 from ..typing import T
-from ..utils import validate_model_defined, validate_object_to_update_defined
+from ..utils import (
+    validate_model_defined,
+    validate_object_to_update_defined,
+    validate_object_instance,
+)
 
 
 class UpdateMixin:
@@ -40,6 +44,7 @@ class UpdateMixin:
         """
         validate_model_defined(cls)
         validate_object_to_update_defined(cls, obj)
+        validate_object_instance(cls, obj)
 
         for key, value in data.items():
             if hasattr(obj, key):

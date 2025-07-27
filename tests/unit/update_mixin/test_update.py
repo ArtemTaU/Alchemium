@@ -78,3 +78,18 @@ def test_update_raises_if_object_is_none():
 
     with pytest.raises(RepositoryUsageError):
         DummyRepository.update(None, data)
+
+
+@pytest.mark.asyncio
+async def test_update_raises_if_object_is_not_instance_of_model(mock_session):
+    class OtherModel:
+        pass
+
+    obj = OtherModel()
+
+    data = {"name": "Updated"}
+
+    with pytest.raises(RepositoryUsageError) as exc_info:
+        DummyRepository.update(obj, data)
+
+    assert "Expected instance of 'DummyModel'" in str(exc_info.value)

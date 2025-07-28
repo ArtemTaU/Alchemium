@@ -12,6 +12,11 @@
 - **Repository pattern:** Write business logic once, keep CRUD in reusable [mixins](alchemium/mixins/base.py).   
 - **Async-native:** Built for async/await, scales with your concurrency needs.  
 - **Type Annotations:** Full IDE support and safer code. 
+## Installation
+
+```bash
+  pip install alchemium
+```
 
 ## Feature Highlights
 

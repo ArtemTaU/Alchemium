@@ -4,7 +4,7 @@ version = "0.0.0"
 description = "Async SQLAlchemy CRUD Library"
 readme = "README.md"
 authors = [{ name = "Artem Tikhanovskii", email = "tikhanovskii@phystech.edu" }]
-license = {text = "MIT"}
+license = "MIT"
 requires-python = ">=3.8"
 dependencies = [
     "sqlalchemy>=2.0,<3.0",
@@ -13,3 +13,7 @@ dependencies = [
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["alchemium*"]

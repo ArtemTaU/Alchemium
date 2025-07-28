@@ -3,7 +3,7 @@ from typing import Optional, List, Dict, Any
 from sqlalchemy import Select
 from sqlalchemy.exc import InvalidRequestError, ArgumentError
 from sqlalchemy.orm import selectinload
-from src.exceptions import (
+from src.errors import (
     RelationNotFoundError,
     FieldNotFoundError,
     QueryError,

@@ -1,5 +1,5 @@
 import pytest
-from src.exceptions import RepositoryUsageError
+from src.errors import RepositoryUsageError
 from tests.models import DummyModel, DummyRepository, IncompleteRepository
 
 

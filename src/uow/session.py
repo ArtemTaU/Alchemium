@@ -14,12 +14,13 @@ from contextlib import AbstractAsyncContextManager
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from sqlalchemy.exc import IntegrityError, DataError, SQLAlchemyError
 
-from ..exceptions import (
+from ..errors import (
     UniqueViolation,
     ForeignKeyViolation,
     DataValidationError,
     TransactionError,
     UnknownTransactionError,
+    IntegrityErrorMapper,
 )
 
 

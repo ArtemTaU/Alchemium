@@ -2,7 +2,7 @@ import pytest
 from src.uow import UnitOfWork
 from tests.models import UserRepository, ProfileRepository, User
 
-from src.exceptions import (
+from src.errors import (
     FieldNotFoundError,
     QueryExecutionError,
     RepositoryUsageError,

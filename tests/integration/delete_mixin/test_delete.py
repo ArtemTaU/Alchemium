@@ -1,8 +1,7 @@
 import pytest
 import sqlalchemy
-from src.exceptions import RepositoryUsageError
 from src.uow import UnitOfWork
-from tests.models import User, UserRepository, IncompleteRepository
+from tests.models import User, UserRepository
 
 
 @pytest.mark.asyncio

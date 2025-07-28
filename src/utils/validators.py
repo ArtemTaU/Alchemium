@@ -1,4 +1,4 @@
-from src.exceptions import RepositoryUsageError
+from src.errors import RepositoryUsageError
 
 from ..typing import T
 

@@ -2,7 +2,7 @@ from typing import Any
 
 from sqlalchemy.exc import StatementError, DataError
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.exceptions import (
+from src.errors import (
     QueryExecutionError,
     UnknownTransactionError,
     DataValidationError,
@@ -76,10 +76,9 @@ class QueryExecutor:
                 original=f"{exc}",
             ) from exc
         except Exception as exc:
-            raise QueryExecutionError(
-                model=model_name,
-                details=str("(unknown error)"),
-                original=f"{exc}",
+            raise UnknownTransactionError(
+                details=f"Unexpected error while executing '{model_name}'.",
+                original=str(exc),
             ) from exc
 
 

@@ -24,7 +24,7 @@ from unittest.mock import patch, AsyncMock
 import pytest
 import sqlalchemy
 from sqlalchemy.exc import IntegrityError, DataError, SQLAlchemyError
-from src.exceptions import (
+from src.errors import (
     UniqueViolation,
     ForeignKeyViolation,
     DataValidationError,

@@ -1,6 +1,6 @@
 import pytest
 import sqlalchemy
-from src.exceptions import DataValidationError
+from src.errors import DataValidationError
 from src.uow import UnitOfWork
 from tests.models import User, UserRepository
 

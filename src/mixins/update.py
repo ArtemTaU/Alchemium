@@ -1,5 +1,5 @@
 from typing import Type, Dict, Any
-from ..exceptions import DataValidationError
+from ..errors import DataValidationError
 
 from ..typing import T
 from ..utils import (
@@ -51,7 +51,7 @@ class UpdateMixin:
                 setattr(obj, key, value)
             else:
                 raise DataValidationError(
-                    details=f"'{key}' for model '{type(obj).__name__}'"
+                    details=f"Invalid argument '{key}' for model '{type(obj).__name__}'"
                 )
 
 

@@ -13,14 +13,12 @@ Key features:
 from contextlib import AbstractAsyncContextManager
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from sqlalchemy.exc import IntegrityError, DataError, SQLAlchemyError
+from sqlalchemy.orm.exc import FlushError
+from .utils import ensure_active_session
 
 from ..errors import (
-    UniqueViolation,
-    ForeignKeyViolation,
-    DataValidationError,
-    TransactionError,
     UnknownTransactionError,
-    IntegrityErrorMapper,
+    ErrorMapper,
 )
 
 
@@ -67,6 +65,18 @@ class UnitOfWork(AbstractAsyncContextManager):
         finally:
             await self.session.close()
 
+    @ensure_active_session
+    async def flush(self):
+        try:
+            await self.session.flush()
+        except (IntegrityError, DataError, SQLAlchemyError, FlushError) as exc:
+            await self.session.rollback()
+            raise ErrorMapper.map(exc) from exc
+        except Exception as exc:
+            await self.session.rollback()
+            raise UnknownTransactionError(details="", original=str(exc)) from exc
+
+    @ensure_active_session
     async def commit(self):
         try:
             await self.session.commit()

@@ -1,6 +1,18 @@
 from .base import TemplateError
 
 
+class SessionActivityError(TemplateError):
+    """Error for session activity check."""
+
+    template = "Session is not active"
+
+
+class SessionFlushError(TemplateError):
+    """Error for flush failure."""
+
+    template = "Flush failed. {original}"
+
+
 class TransactionError(TemplateError):
     """Base error for any commit/transaction failure."""
 

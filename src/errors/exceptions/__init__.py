@@ -1,4 +1,9 @@
-from .session import TransactionError, UnknownTransactionError
+from .session import (
+    TransactionError,
+    UnknownTransactionError,
+    SessionFlushError,
+    SessionActivityError,
+)
 from .integrity import UniqueViolation, ForeignKeyViolation
 from .mixins import RepositoryUsageError, DataValidationError
 from .workers import QueryExecutionError
@@ -13,6 +18,8 @@ from .builders import (
 __all__ = [
     "TransactionError",
     "UnknownTransactionError",
+    "SessionFlushError",
+    "SessionActivityError",
     "UniqueViolation",
     "ForeignKeyViolation",
     "RepositoryUsageError",

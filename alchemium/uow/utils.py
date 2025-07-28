@@ -1,4 +1,4 @@
-from src.errors import SessionActivityError
+from ..errors import SessionActivityError
 
 
 def ensure_active_session(func):

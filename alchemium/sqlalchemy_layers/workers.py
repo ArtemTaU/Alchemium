@@ -2,12 +2,12 @@ from typing import Any
 
 from sqlalchemy.exc import StatementError, DataError
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.errors import (
+from ..errors import (
     QueryExecutionError,
     UnknownTransactionError,
     DataValidationError,
 )
-from src.typing import ModelType, T
+from ..base_typing import ModelType, T
 
 
 class SessionAdder:

@@ -1,6 +1,6 @@
-from src.errors import RepositoryUsageError
+from ..errors import RepositoryUsageError
 
-from ..typing import T
+from ..base_typing import T
 
 
 def validate_model_defined(cls):

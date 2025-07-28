@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import declarative_base, relationship
-from src.mixins import CrudRepository
+from alchemium import CrudRepository
 
 Base = declarative_base()
 

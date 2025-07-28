@@ -1,5 +1,5 @@
 import pytest
-from src.errors import RepositoryUsageError
+from alchemium.errors import RepositoryUsageError
 from tests.models import DummyModel, DummyRepository, IncompleteRepository
 
 

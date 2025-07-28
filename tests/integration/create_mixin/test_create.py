@@ -24,14 +24,14 @@ from unittest.mock import patch, AsyncMock
 import pytest
 import sqlalchemy
 from sqlalchemy.exc import IntegrityError, DataError, SQLAlchemyError
-from src.errors import (
+from alchemium.errors import (
     UniqueViolation,
     ForeignKeyViolation,
     DataValidationError,
     TransactionError,
     UnknownTransactionError,
 )
-from src.uow import UnitOfWork
+from alchemium import UnitOfWork
 from tests.models import UserRepository, User
 
 

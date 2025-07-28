@@ -1,8 +1,8 @@
 import pytest
-from src.uow import UnitOfWork
+from alchemium import UnitOfWork
 from tests.models import UserRepository, ProfileRepository, User
 
-from src.errors import (
+from alchemium.errors import (
     RelationNotFoundError,
     FieldNotFoundError,
     QueryExecutionError,

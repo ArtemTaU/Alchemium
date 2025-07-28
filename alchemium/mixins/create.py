@@ -2,7 +2,7 @@ from typing import Type, Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
 from ..sqlalchemy_layers import SessionAdder, ModelInitializer
 
-from ..typing import T
+from ..base_typing import T
 from ..utils import validate_model_defined
 
 

@@ -1,6 +1,6 @@
 import pytest
 
-from src.errors import (
+from alchemium.errors import (
     DataValidationError,
     RepositoryUsageError,
 )

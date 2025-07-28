@@ -3,14 +3,14 @@ from typing import Optional, List, Dict, Any
 from sqlalchemy import Select
 from sqlalchemy.exc import InvalidRequestError, ArgumentError
 from sqlalchemy.orm import selectinload
-from src.errors import (
+from ..errors import (
     RelationNotFoundError,
     FieldNotFoundError,
     QueryError,
     OrderByFieldError,
     PaginationParameterError,
 )
-from src.typing import ModelType
+from ..base_typing import ModelType
 
 
 class QueryBuilder:

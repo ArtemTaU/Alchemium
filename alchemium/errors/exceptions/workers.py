@@ -1,4 +1,4 @@
-from src.errors.exceptions.base import TemplateError
+from .base import TemplateError
 
 
 class QueryExecutionError(TemplateError):

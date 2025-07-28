@@ -1,9 +1,9 @@
 [project]
-name = "Alchemium"
-version = "0.0.1"
-description = "Удобный CRUD-слой над SQLAlchemy"
+name = "alchemium"
+version = "0.0.0"
+description = "Async SQLAlchemy CRUD Library"
 readme = "README.md"
-authors = [{ name = "Твоё Имя", email = "you@email.com" }]
+authors = [{ name = "Artem Tikhanovskii", email = "tikhanovskii@phystech.edu" }]
 license = {text = "MIT"}
 requires-python = ">=3.8"
 dependencies = [

@@ -1,6 +1,6 @@
 import pytest
 import sqlalchemy
-from src.uow import UnitOfWork
+from alchemium import UnitOfWork
 from tests.models import User, UserRepository
 
 

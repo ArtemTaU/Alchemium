@@ -1,6 +1,6 @@
 from sqlalchemy.exc import IntegrityError, DataError, SQLAlchemyError
 from sqlalchemy.orm.exc import FlushError
-from src.errors import (
+from .exceptions import (
     UniqueViolation,
     ForeignKeyViolation,
     TransactionError,

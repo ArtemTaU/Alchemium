@@ -1,14 +1,15 @@
 
 # Async SQLAlchemy CRUD Library  
-  
-A modular and extensible library for building high-quality, maintainable CRUD operations using **SQLAlchemy** and the Unit of Work (UoW) pattern.    
-Async-first: Perfect for FastAPI, aiohttp, and any modern Python 3.8+ async application.
+
+>A modular and extensible library for building high-quality, maintainable CRUD operations using **SQLAlchemy** and the Unit of Work (UoW) pattern.    
+
+>Async-first: Perfect for FastAPI, aiohttp, and any modern Python 3.8+ async application.
 ---  
   
 ## Key Features  
   
-- **[UnitOfWork](src/uow/session.py)**: **Automatic transaction management — commit or rollback on context exit. No session leaks.**
-- **Repository pattern:** Write business logic once, keep CRUD in reusable mixins.   
+- **[UnitOfWork](alchemium/uow/session.py)**: **Automatic transaction management — commit or rollback on context exit. No session leaks.**
+- **Repository pattern:** Write business logic once, keep CRUD in reusable [mixins](alchemium/mixins/base.py).   
 - **Async-native:** Built for async/await, scales with your concurrency needs.  
 - **Type Annotations:** Full IDE support and safer code. 
 
@@ -74,9 +75,10 @@ async with engine.begin() as conn:
 
 
 ### Step 3: Create a Repository
+
 ```python  
 from alchemium import CrudRepository  
-  
+
 class UserRepository(CrudRepository):  
 	model = User  
 ```  
@@ -142,31 +144,6 @@ Transaction will be closed automatically or an exception will be raised if the s
 **Robust async workflows:**
 - Fully async from top to bottom — ideal for modern Python frameworks.
 
-
-
-
-### **Step-by-step Explanation & Advantages**
-        
-4.  **Get Assigned IDs Instantly**
-    
-    -   If you need to get the database-generated ID after creating an object, simply call:
-		`await uow.flush()`
-        This makes database-generated fields (e.g. id, timestamp) available before committing the transaction.
-        
-5.  **Isolated Transactions for Each Step**
-    
-    -   **Advantage:**  
-        Every CRUD operation is isolated and safe:  
-        you always know when and where the session starts and ends.
-        
-6.  **Safe Exception Handling**
-    
-    -   **Advantage:**  
-        If anything fails inside the UnitOfWork block, changes will not be committed — you'll never have a half-applied transaction.
-        
-7.  **Async-native**
-    
-    -   The entire workflow is non-blocking and perfect for use in async frameworks and applications.
 ---
 
 ### **Ready to build safe, maintainable async CRUD with minimal boilerplate? Try Alchemium!**

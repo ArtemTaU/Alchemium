@@ -70,15 +70,9 @@ class UnitOfWork(AbstractAsyncContextManager):
     async def commit(self):
         try:
             await self.session.commit()
-        except IntegrityError as exc:
+        except (IntegrityError, DataError, SQLAlchemyError) as exc:
             await self.session.rollback()
-            raise IntegrityErrorMapper.map(exc) from exc
-        except DataError as exc:
-            await self.session.rollback()
-            raise DataValidationError(original=str(exc)) from exc
-        except SQLAlchemyError as exc:
-            await self.session.rollback()
-            raise TransactionError(original=str(exc)) from exc
+            raise ErrorMapper.map(exc) from exc
         except Exception as exc:
             await self.session.rollback()
             raise UnknownTransactionError(details="", original=str(exc)) from exc

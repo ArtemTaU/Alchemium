@@ -1,2 +1,2 @@
 from .exceptions import *
-from .mappers import IntegrityErrorMapper
+from .mappers import IntegrityErrorMapper, ErrorMapper

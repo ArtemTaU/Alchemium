@@ -182,6 +182,6 @@ async def test_create_generic_integrity_error(async_session_factory):
             "commit",
             AsyncMock(side_effect=IntegrityError("check constraint", None, None)),
         ):
-            with pytest.raises(TransactionError):
+            with pytest.raises(DataValidationError):
                 await UserRepository.create(uow.session, user_data)
                 await uow.commit()

@@ -154,3 +154,52 @@ Transaction will be closed automatically or an exception will be raised if the s
 ### **Ready to build safe, maintainable async CRUD with minimal boilerplate? Try Alchemium!**
 
 ---
+
+## **Comparison Table**
+
+| Library          | SQLAlchemy <br/>backend | Async support | UoW / Repo | Pydantic / FastAPI |  Flexible filters | Bulk/Batch ops | Raw SQL access | Docs & Community | Learning curve | Focus / Audience                       |
+| ---------------- | ------------------ | ------------- | ---------- | ------------------ | ---------------- | -------------- | -------------- | ---------------- | -------------- | -------------------------------------- |
+| **Alchemium**    | ✅ <br/>(native, 2.x)    | ✅ (native)    | ✅          | ❌                  | 🔜 (roadmap)     | 🔜 (roadmap)     | 🔜 (roadmap)   | 🚧 (new, WIP)    | ⭐⭐             | Async backend, "clean arch", UoW, repo |
+| **SQLModel**     | ✅ <br/>(hybrid)         | ⚠️ (partial)  | ❌          | ✅ (native)         | ⚠️ (Pydantic)    | ⚠️ (manual)    | ⚠️ (possible)  | ⭐⭐⭐⭐⭐            | ⭐              | FastAPI, rapid prototyping, Pydantic   |
+| **Ormar**        | ❌                  | ✅ (native)    | ❌          | ✅ (native)         | ✅                | ❌              | ⚠️ (limited)   | ⭐⭐⭐⭐             | ⭐              | Django-like, Pydantic, simple async    |
+| **Tortoise ORM** | ❌                  | ✅ (native)    | ❌          | ❌                  | ✅                | ⚠️ (manual)    | ⚠️ (limited)   |  ⭐⭐⭐              | ⭐              | Django-style async ORM                 |
+| **Gino**         | ❌                  | ✅ (native)    | ❌          | ❌                  | ✅                | ✅              | ✅              | ⭐⭐⭐              | ⭐⭐             | Async PostgreSQL, microservices        |
+
+✅ = First-class/native support
+
+⚠️ = Limited, not out-of-the-box, or requires manual implementation
+
+🔜 = Planned / on the roadmap
+
+❌ = Not supported
+
+➖ = External tool required (e.g., Alembic)
+
+🚧 = Young / still growing
+
+⭐ = Easier (the more stars, the larger and more beginner-friendly the community & docs)
+
+### **How to read this table:**
+- Alchemium — Choose this if you want true async, modern patterns (Unit of Work, repositories), and are ready to manage migrations and admin UI yourself.
+- SQLModel — Best if you need maximum simplicity, tight FastAPI integration, auto-Pydantic support, and rapid prototyping.
+- Ormar — For those who prefer a Django-like approach, simplicity, and Pydantic, but with some limits on deep customization.
+- Tortoise — Great for those who want a Django-style experience in async Python.
+- Gino — Pure async for PostgreSQL, minimalism, and “low-level” database control.
+
+
+## **Roadmap**
+
+**Nested Filters:**
+- Add support for filtering by related models (joinedload, relationship, subqueries)
+
+**Raw SQL Read + Update:**
+- Allow efficient selects and updates using plain SQLAlchemy Core queries, not just ORM methods.
+
+**Extensible QuerySet Filters:**
+- QuerySet-style queries: .filter(), .exclude(), .all(), etc.
+
+**Flexible Bulk Operations:**
+- Create, update, and delete multiple objects in a single command.
+
+**Integration Examples for FastAPI/aiogram:**
+- Detailed templates, recipes, and documentation for real-world usage.

@@ -72,6 +72,19 @@ async def async_session(async_engine):
 
 @pytest_asyncio.fixture
 async def async_session_factory(async_engine):
+    """
+    Provides a factory for creating asynchronous SQLAlchemy sessions
+    for the test database.
+
+    Args:
+        async_engine (AsyncEngine): The async engine fixture.
+
+    Yields:
+        Callable[..., AsyncSession]: A factory function to create new async sessions.
+
+    The factory can be used to create multiple independent sessions within one test,
+    ensuring test isolation when needed. All tables are created before yielding the factory.
+    """
     async with async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     return async_sessionmaker(async_engine, expire_on_commit=False, class_=AsyncSession)
@@ -79,5 +92,19 @@ async def async_session_factory(async_engine):
 
 @pytest_asyncio.fixture
 def mock_session():
+    """
+    Provides a mock asynchronous SQLAlchemy session for unit tests.
+
+    Yields:
+        AsyncMock: A mock AsyncSession object.
+
+    Useful for testing repository logic without a real database.
+    Can be used to assert calls and control the return values of session methods.
+
+    Example usage:
+        def test_service_logic(mock_session):
+            # mock_session can be configured here
+            ...
+    """
     session = AsyncMock()
     return session

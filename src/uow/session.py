@@ -72,12 +72,7 @@ class UnitOfWork(AbstractAsyncContextManager):
             await self.session.commit()
         except IntegrityError as exc:
             await self.session.rollback()
-            msg = str(exc.orig).lower()
-            if "unique" in msg:
-                raise UniqueViolation(original=str(exc)) from exc
-            if "foreign key" in msg:
-                raise ForeignKeyViolation(original=str(exc)) from exc
-            raise TransactionError(original=str(exc)) from exc
+            raise IntegrityErrorMapper.map(exc) from exc
         except DataError as exc:
             await self.session.rollback()
             raise DataValidationError(original=str(exc)) from exc

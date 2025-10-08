@@ -30,12 +30,14 @@ class IntegrityErrorMapper:
 class ErrorMapper:
     @staticmethod
     def map(exc: Exception) -> Exception:
-        if isinstance(exc, IntegrityError):
-            raise IntegrityErrorMapper.map(exc) from exc
-        if isinstance(exc, DataError):
-            return DataValidationError(original=str(exc))
-        if isinstance(exc, FlushError):
-            return SessionFlushError(original=str(exc))
-        if isinstance(exc, SQLAlchemyError):
-            return TransactionError(original=str(exc))
-        return UnknownTransactionError(details="", original=str(exc))
+        match exc:
+            case IntegrityError():
+                raise IntegrityErrorMapper.map(exc) from exc
+            case DataError():
+                return DataValidationError(original=str(exc))
+            case FlushError():
+                return SessionFlushError(original=str(exc))
+            case SQLAlchemyError():
+                return TransactionError(original=str(exc))
+            case _:
+                return UnknownTransactionError(details="", original=str(exc))

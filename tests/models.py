@@ -1,8 +1,10 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy.orm import declarative_base, relationship, DeclarativeBase
 from alchemium import CrudRepository
 
-Base = declarative_base()
+
+class Base(DeclarativeBase):
+    pass
 
 
 class User(Base):
@@ -42,4 +44,4 @@ class DummyRepository(CrudRepository):
 
 
 class IncompleteRepository(CrudRepository):
-    model = None
+    pass

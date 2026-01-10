@@ -1,6 +1,6 @@
 from ..errors import RepositoryUsageError
 
-from ..base_typing import T
+from ..base_typing import T, ModelType
 
 
 def validate_model_defined(cls):
@@ -16,7 +16,7 @@ def validate_model_defined(cls):
         )
 
 
-def validate_object_to_update_defined(cls, obj: T):
+def validate_object_to_update_defined(cls, obj):
     """
     Ensure that the model attribute is defined on the class.
 
@@ -30,7 +30,7 @@ def validate_object_to_update_defined(cls, obj: T):
         )
 
 
-def validate_object_instance(cls, obj: T):
+def validate_object_instance(cls, obj):
     """
     Ensure that the provided object is an instance of the repository's model.
 

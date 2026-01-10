@@ -1,8 +1,10 @@
-from typing import Type, Dict, Any
+from typing import Type, Dict, Any, Self
+
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import DeclarativeMeta
 from ..sqlalchemy_layers import SessionAdder, ModelInitializer
 
-from ..base_typing import T
+from ..base_typing import T, ModelType
 from ..utils import validate_model_defined
 
 
@@ -18,10 +20,14 @@ class CreateMixin(ModelInitializer, SessionAdder):
         model (Type[T]): The SQLAlchemy ORM model class to create.
     """
 
-    model = None
+    model: ModelType
 
     @classmethod
-    async def create(cls: Type[T], asession: AsyncSession, data: Dict[str, Any]) -> T:
+    async def create(
+        cls: type[Self],
+        asession: AsyncSession,
+        data: Dict[str, Any],
+    ) -> ModelType:
         """
         Create a new ORM model instance and add it to the async session with error handling.
 

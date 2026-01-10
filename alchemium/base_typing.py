@@ -1,4 +1,6 @@
-from typing import TypeVar, Type, Any
+from typing import TypeVar, TypeAlias
 
-T = TypeVar("T")
-ModelType = Type[Any]
+from sqlalchemy.orm import DeclarativeBase
+
+T = TypeVar("T", bound=DeclarativeBase)
+ModelType: TypeAlias = type[T]

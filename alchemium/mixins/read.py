@@ -1,24 +1,24 @@
-from typing import Type, Optional, Dict, Any, Sequence, List
+from typing import Type, Optional, Dict, Any, Sequence, List, Self
 
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from ..sqlalchemy_layers import *
-from ..base_typing import T
+from ..base_typing import T, ModelType
 
 from ..utils import validate_model_defined
 
 
 class ReadMixin(QueryBuilder, QueryExecutor):
-    model = None
+    model: ModelType
 
     @classmethod
     async def get_one(
-        cls: Type[T],
+        cls: type[Self],
         *,
         asession: AsyncSession,
         filters: Optional[Dict[str, Any]] = None,
-        joins: Optional[Sequence[str]] = None,
-    ) -> Optional[T]:
+        joins: Sequence[str] | None = None,
+    ) -> type[Self]:
         """
         Retrieve a single object matching the specified filters, with optional joins.
 
@@ -45,7 +45,7 @@ class ReadMixin(QueryBuilder, QueryExecutor):
 
     @classmethod
     async def list(
-        cls: Type[T],
+        cls: type[Self],
         *,
         asession: AsyncSession,
         filters: Optional[Dict[str, Any]] = None,
@@ -53,7 +53,7 @@ class ReadMixin(QueryBuilder, QueryExecutor):
         skip: Optional[int] = None,
         limit: Optional[int] = None,
         joins: Optional[List[str]] = None,
-    ) -> List[T]:
+    ) -> list[Any]:
         """
         Retrieve a list of records matching filters, with optional ordering and pagination.
 
@@ -112,7 +112,7 @@ class ReadMixin(QueryBuilder, QueryExecutor):
 
     @classmethod
     async def first(
-        cls,
+        cls: type[Self],
         *,
         asession: AsyncSession,
         filters: Optional[Dict[str, Any]] = None,

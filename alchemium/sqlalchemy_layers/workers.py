@@ -1,5 +1,6 @@
-from typing import Any
+from typing import Any, Self
 
+from sqlalchemy import Select
 from sqlalchemy.exc import StatementError, DataError
 from sqlalchemy.ext.asyncio import AsyncSession
 from ..errors import (
@@ -22,7 +23,7 @@ class SessionAdder:
     def session_add(
         cls,
         asession: AsyncSession,
-        obj: object,
+        obj: ModelType,
         model_name: str,
     ) -> None:
         """
@@ -53,7 +54,7 @@ class QueryExecutor:
 
     @staticmethod
     async def execute(
-        stmt,
+        stmt: Select,
         asession: AsyncSession,
         model_name: str,
     ) -> Any:
@@ -97,7 +98,11 @@ class ModelInitializer:
     model: ModelType
 
     @classmethod
-    def initialize(cls, data: dict, model_name: str) -> T:
+    def initialize(
+        cls: type[Self],
+        data: dict,
+        model_name: str,
+    ) -> ModelType:
         """
         Instantiate a SQLAlchemy model object with error handling.
 

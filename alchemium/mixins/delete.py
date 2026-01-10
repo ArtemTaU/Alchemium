@@ -15,10 +15,10 @@ Typical usage:
         await SomeRepository.delete(uow.session, some_instance)
 """
 
-from typing import Type
+from typing import Type, Self
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..base_typing import T
+from ..base_typing import T, ModelType
 from ..utils import (
     validate_model_defined,
     validate_object_to_update_defined,
@@ -42,10 +42,14 @@ class DeleteMixin:
         model (Type[T]): The SQLAlchemy ORM model class to be deleted.
     """
 
-    model = None
+    model: ModelType
 
     @classmethod
-    async def delete(cls: Type[T], asession: AsyncSession, obj: T) -> T:
+    async def delete(
+        cls: type[Self],
+        asession: AsyncSession,
+        obj: ModelType,
+    ) -> None:
         """
         Delete an ORM model instance using the provided async session.
 
@@ -63,3 +67,5 @@ class DeleteMixin:
         validate_object_to_update_defined(cls, obj)
         validate_object_instance(cls, obj)
         await asession.delete(obj)
+
+        return

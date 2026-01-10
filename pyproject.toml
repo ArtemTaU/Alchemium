@@ -1,13 +1,25 @@
 [project]
 name = "alchemium"
-version = "0.0.0"
+version = "0.1.0"
 description = "Async SQLAlchemy CRUD Library"
 readme = "README.md"
 authors = [{ name = "Artem Tikhanovskii", email = "tikhanovskii@phystech.edu" }]
 license = "MIT"
-requires-python = ">=3.8"
+requires-python = ">=3.11"
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
 dependencies = [
     "sqlalchemy>=2.0,<3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "mypy>=1.8",
 ]
 
 [build-system]
@@ -17,3 +29,10 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["alchemium*"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_unused_configs = true
+disallow_incomplete_defs = true
+
+files = ["alchemium", "tests"]

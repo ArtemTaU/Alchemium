@@ -1,4 +1,4 @@
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Self, Sequence
 
 from sqlalchemy import Select
 from sqlalchemy.exc import InvalidRequestError, ArgumentError
@@ -36,9 +36,9 @@ class QueryBuilder:
 
     @classmethod
     def apply_joins(
-        cls,
+        cls: type[Self],
         stmt: Select,
-        joins: Optional[List[str]],
+        joins: Sequence[str] | None,
         model_name: str,
     ) -> Select:
         """

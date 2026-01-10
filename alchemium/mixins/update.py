@@ -1,7 +1,7 @@
-from typing import Type, Dict, Any
+from typing import Type, Dict, Any, Self
 from ..errors import DataValidationError
 
-from ..base_typing import T
+from ..base_typing import T, ModelType
 from ..utils import (
     validate_model_defined,
     validate_object_to_update_defined,
@@ -26,10 +26,14 @@ class UpdateMixin:
         model (Type[T]): The SQLAlchemy ORM model class to update.
     """
 
-    model = None
+    model: ModelType
 
     @classmethod
-    def update(cls: Type[T], obj: T, data: Dict[str, Any]) -> T:
+    def update(
+        cls: type[Self],
+        obj: T,
+        data: Dict[str, Any],
+    ) -> None:
         """
         Update an existing ORM model instance with provided data.
 
@@ -53,6 +57,7 @@ class UpdateMixin:
                 raise DataValidationError(
                     details=f"Invalid argument '{key}' for model '{type(obj).__name__}'"
                 )
+        return
 
 
 # Комментарий: есть способ bulk update через алхимию,
